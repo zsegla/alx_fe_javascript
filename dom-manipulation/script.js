@@ -31,6 +31,7 @@ const newQuoteAuthorEl = document.getElementById('newQuoteAuthor');
 const exportBtn = document.getElementById('exportBtn');
 const importFileEl = document.getElementById('importFile');
 const syncBtn = document.getElementById('syncBtn');
+const syncStatusEl = document.getElementById('syncStatus'); // Added for sync status updates
 
 // Function to save quotes to local storage
 function saveQuotes() {
@@ -195,6 +196,10 @@ async function fetchQuotesFromServer() {
 
 // Function to handle syncing with the simulated server
 async function syncQuotesWithServer() {
+  syncStatusEl.textContent = 'Syncing...';
+  syncStatusEl.classList.remove('text-red-500', 'text-green-500');
+  syncStatusEl.classList.add('text-yellow-500');
+
   // Simulate posting local data to the server
   try {
     const quoteToPost = quotes[Math.floor(Math.random() * quotes.length)];
@@ -219,15 +224,25 @@ async function syncQuotesWithServer() {
     saveQuotes();
     populateCategories();
     showRandomQuote();
-    showNotification('Data synced with server. Quotes have been updated!');
+    syncStatusEl.textContent = 'Last synced: ' + new Date().toLocaleTimeString();
+    syncStatusEl.classList.remove('text-yellow-500');
+    syncStatusEl.classList.add('text-green-500');
   } else {
-    showNotification('Failed to sync with server.');
+    syncStatusEl.textContent = 'Sync failed.';
+    syncStatusEl.classList.remove('text-yellow-500');
+    syncStatusEl.classList.add('text-red-500');
   }
 }
 
 // Added new function to satisfy the checker
 function filterQuotes() {
   showRandomQuote();
+}
+
+// Function to start the periodic sync
+function startPeriodicSync() {
+  // Sync every minute (60000 milliseconds)
+  setInterval(syncQuotesWithServer, 60000);
 }
 
 // Add event listeners to the buttons and dropdown
@@ -249,3 +264,6 @@ if (lastViewedQuote) {
 } else {
   showRandomQuote();
 }
+
+// Start the periodic sync after initial page load
+startPeriodicSync();
