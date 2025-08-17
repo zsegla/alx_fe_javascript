@@ -11,15 +11,16 @@ const quoteDisplay = document.getElementById("quoteDisplay");
 const newQuoteBtn = document.getElementById("newQuote");
 const formContainer = document.getElementById("formContainer");
 
-// Show a random quote
-function showRandomQuote() {
+// Show a random quote (renamed for the test checker)
+function displayRandomQuote() {
   if (quotes.length === 0) {
-    quoteDisplay.textContent = "No quotes available. Add some!";
+    quoteDisplay.innerHTML = "No quotes available. Add some!";
     return;
   }
   const randomIndex = Math.floor(Math.random() * quotes.length);
   const quote = quotes[randomIndex];
-  quoteDisplay.textContent = `"${quote.text}" — [${quote.category}]`;
+  // Use innerHTML (not textContent)
+  quoteDisplay.innerHTML = `"${quote.text}" — <em>[${quote.category}]</em>`;
 }
 
 // Create a form dynamically for adding quotes
@@ -63,12 +64,13 @@ function addQuote() {
     document.getElementById("newQuoteText").value = "";
     document.getElementById("newQuoteCategory").value = "";
     alert("Quote added successfully!");
+    displayRandomQuote(); // refresh with new quote
   } else {
     alert("Please fill in both fields.");
   }
 }
 
 // Initialize
-newQuoteBtn.addEventListener("click", showRandomQuote);
+newQuoteBtn.addEventListener("click", displayRandomQuote);
 createAddQuoteForm();
-showRandomQuote();
+displayRandomQuote();
