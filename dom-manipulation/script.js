@@ -173,7 +173,7 @@ function importFromJsonFile(event) {
   reader.readAsText(file);
 }
 
-// New function to fetch data from the server using a mock API
+// Function to fetch data from the server using a mock API
 async function fetchQuotesFromServer() {
   try {
     const response = await fetch('https://jsonplaceholder.typicode.com/posts');
@@ -195,6 +195,23 @@ async function fetchQuotesFromServer() {
 
 // Function to handle syncing with the simulated server
 async function syncQuotesWithServer() {
+  // Simulate posting local data to the server
+  try {
+    const quoteToPost = quotes[Math.floor(Math.random() * quotes.length)];
+    const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(quoteToPost),
+    });
+    const serverData = await response.json();
+    console.log("Posted data to server:", serverData);
+  } catch (error) {
+    console.error("Error posting data:", error);
+  }
+
+  // Then fetch the latest data from the server
   const serverQuotes = await fetchQuotesFromServer();
   if (serverQuotes.length > 0) {
     // Simple conflict resolution: server data takes precedence
