@@ -37,6 +37,22 @@ function saveQuotes() {
   localStorage.setItem('quotes', JSON.stringify(quotes));
 }
 
+// Function to show a temporary notification message
+function showNotification(message) {
+  let notification = document.getElementById('notification');
+  if (!notification) {
+    notification = document.createElement('div');
+    notification.id = 'notification';
+    notification.className = 'fixed bottom-4 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-500 opacity-0';
+    document.body.appendChild(notification);
+  }
+  notification.textContent = message;
+  notification.classList.remove('opacity-0');
+  setTimeout(() => {
+    notification.classList.add('opacity-0');
+  }, 3000);
+}
+
 // Function to populate categories dynamically (as per Task 2)
 function populateCategories() {
   const categories = [...new Set(quotes.map(quote => quote.category))];
@@ -91,7 +107,7 @@ function addQuote() {
   const author = newQuoteAuthorEl.value.trim() || 'Unknown';
 
   if (text === "" || category === "") {
-    alert("Please enter both the quote and a category.");
+    showNotification("Please enter both the quote and a category.");
     return;
   }
 
@@ -146,42 +162,49 @@ function importFromJsonFile(event) {
         saveQuotes();
         populateCategories();
         showRandomQuote();
-        alert('Quotes imported successfully!');
+        showNotification('Quotes imported successfully!');
       } else {
-        alert('Invalid JSON file. Please import a JSON array of quotes.');
+        showNotification('Invalid JSON file. Please import a JSON array of quotes.');
       }
     } catch (error) {
-      alert('Failed to parse JSON file: ' + error.message);
+      showNotification('Failed to parse JSON file: ' + error.message);
     }
   };
   reader.readAsText(file);
 }
 
-// Function to simulate fetching data from a server endpoint
+// New function to fetch data from the server using a mock API
 async function fetchQuotesFromServer() {
-  // In a real application, you would use 'fetch' to get data from an API
-  // For this simulation, we'll use a hardcoded array
-  const serverData = [
-    { text: "The best way to predict the future is to create it.", category: "Innovation", author: "Peter Drucker" },
-    { text: "Spread love everywhere you go. Let no one ever come to you without leaving happier.", category: "Inspiration", author: "Mother Teresa" },
-    { text: "The greatest glory in living lies not in never falling, but in rising every time we fall.", category: "Life", author: "Nelson Mandela" }
-  ];
-
-  return serverData;
+  try {
+    const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    // Simulate converting generic data to the quotes format
+    return data.slice(0, 5).map(item => ({
+      text: item.title,
+      category: 'Server',
+      author: `User ${item.userId}`
+    }));
+  } catch (error) {
+    console.error('Fetch error:', error);
+    return [];
+  }
 }
 
 // Function to handle syncing with the simulated server
 async function syncQuotesWithServer() {
-  try {
-    const serverQuotes = await fetchQuotesFromServer();
+  const serverQuotes = await fetchQuotesFromServer();
+  if (serverQuotes.length > 0) {
     // Simple conflict resolution: server data takes precedence
     quotes = serverQuotes;
     saveQuotes();
     populateCategories();
     showRandomQuote();
-    alert('Data synced with server. Quotes have been updated!');
-  } catch (error) {
-    alert('Failed to sync with server.');
+    showNotification('Data synced with server. Quotes have been updated!');
+  } else {
+    showNotification('Failed to sync with server.');
   }
 }
 
@@ -192,7 +215,7 @@ function filterQuotes() {
 
 // Add event listeners to the buttons and dropdown
 newQuoteBtn.addEventListener('click', showRandomQuote);
-categoryFilterEl.addEventListener('change', filterQuotes); // Now calls the new filterQuotes function
+categoryFilterEl.addEventListener('change', filterQuotes);
 addQuoteBtn.addEventListener('click', addQuote);
 showFormBtn.addEventListener('click', createAddQuoteForm);
 exportBtn.addEventListener('click', exportToJsonFile);
