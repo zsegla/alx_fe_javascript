@@ -1,44 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dynamic Quote Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 2rem;
+      background-color: #f3f4f6;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    .container {
+      background-color: #ffffff;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 600px;
+      width: 100%;
     }
     #quoteDisplay {
-      margin: 1rem 0;
-      padding: 1rem;
-      border: 1px solid #ccc;
-      min-height: 50px;
-    }
-    form {
-      margin-top: 1rem;
-    }
-    input {
-      margin: 0.25rem 0;
-      padding: 0.5rem;
-      width: 250px;
-      display: block;
-    }
-    button {
-      margin-top: 0.5rem;
-      padding: 0.5rem 1rem;
+      min-height: 8rem; /* Ensure space for the quote */
     }
   </style>
 </head>
-<body>
-  <h1>Dynamic Quote Generator</h1>
-  
-  <!-- Quote display -->
-  <div id="quoteDisplay"></div>
-  <button id="newQuote">Show New Quote</button>
+<body class="bg-gray-100">
 
-  <!-- Add quote form will be injected dynamically -->
-  <div id="formContainer"></div>
+  <div class="container space-y-8">
+    <h1 class="text-4xl font-bold text-gray-800">Dynamic Quote Generator</h1>
+
+    <!-- Quote Display Section -->
+    <div id="quoteDisplay" class="p-6 bg-gray-50 rounded-lg border border-gray-200">
+      <p id="quoteText" class="text-xl font-medium text-gray-700 italic">"The only way to do great work is to love what you do."</p>
+      <p id="quoteAuthor" class="mt-2 text-sm text-gray-500">- Steve Jobs</p>
+    </div>
+
+    <!-- Controls Section -->
+    <div class="space-y-4">
+      <button id="newQuote" class="w-full py-3 px-6 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-colors">
+        Show New Quote
+      </button>
+
+      <div class="space-y-2">
+        <label for="categoryFilter" class="block text-sm font-medium text-gray-700">Filter by Category:</label>
+        <select id="categoryFilter" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+          <option value="all">All Categories</option>
+        </select>
+      </div>
+
+      <div class="space-y-2">
+        <button id="showFormBtn" class="w-full py-3 px-6 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition-colors">
+          Add New Quote
+        </button>
+      </div>
+    </div>
+
+    <!-- Dynamic Add Quote Form -->
+    <div id="addQuoteFormContainer" class="hidden mt-6 p-6 border border-gray-300 rounded-lg bg-white">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">Add a New Quote</h2>
+      <div class="space-y-4">
+        <div>
+          <label for="newQuoteText" class="block text-sm font-medium text-gray-700 text-left">Quote</label>
+          <textarea id="newQuoteText" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg" placeholder="Enter quote text"></textarea>
+        </div>
+        <div>
+          <label for="newQuoteCategory" class="block text-sm font-medium text-gray-700 text-left">Category</label>
+          <input id="newQuoteCategory" type="text" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg" placeholder="Enter quote category" />
+        </div>
+        <div>
+          <label for="newQuoteAuthor" class="block text-sm font-medium text-gray-700 text-left">Author</label>
+          <input id="newQuoteAuthor" type="text" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg" placeholder="Enter author name" />
+        </div>
+        <button id="addQuoteBtn" class="w-full py-2 px-4 bg-purple-600 text-white font-semibold rounded-lg shadow-md hover:bg-purple-700 transition-colors">
+          Submit Quote
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
