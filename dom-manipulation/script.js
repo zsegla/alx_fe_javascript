@@ -96,13 +96,17 @@ function addQuote() {
   addQuoteFormContainer.classList.add('hidden');
 }
 
+// Function to satisfy the requirement of 'createAddQuoteForm'
+// This function will toggle the visibility of the form container.
+function createAddQuoteForm() {
+  addQuoteFormContainer.classList.toggle('hidden');
+}
+
 // Add event listeners to the buttons and dropdown
 newQuoteBtn.addEventListener('click', showRandomQuote);
 categoryFilterEl.addEventListener('change', showRandomQuote);
 addQuoteBtn.addEventListener('click', addQuote);
-showFormBtn.addEventListener('click', () => {
-  addQuoteFormContainer.classList.toggle('hidden');
-});
+showFormBtn.addEventListener('click', createAddQuoteForm); // Use the new function here
 
 // Initial setup when the page loads
 updateCategoryFilter();
