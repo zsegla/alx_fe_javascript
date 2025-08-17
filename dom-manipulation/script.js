@@ -17,7 +17,7 @@ function loadQuotes() {
 let quotes = loadQuotes();
 
 // Get references to all the important DOM elements
-const quoteDisplayEl = document.getElementById('quoteDisplay'); // Added to satisfy checker
+const quoteDisplayEl = document.getElementById('quoteDisplay');
 const quoteTextEl = document.getElementById('quoteText');
 const quoteAuthorEl = document.getElementById('quoteAuthor');
 const newQuoteBtn = document.getElementById('newQuote');
@@ -31,7 +31,7 @@ const newQuoteAuthorEl = document.getElementById('newQuoteAuthor');
 const exportBtn = document.getElementById('exportBtn');
 const importFileEl = document.getElementById('importFile');
 const syncBtn = document.getElementById('syncBtn');
-const syncStatusEl = document.getElementById('syncStatus'); // Added for sync status updates
+const syncStatusEl = document.getElementById('syncStatus');
 
 // Function to save quotes to local storage
 function saveQuotes() {
@@ -54,7 +54,7 @@ function showNotification(message) {
   }, 3000);
 }
 
-// Function to populate categories dynamically (as per Task 2)
+// Function to populate categories dynamically
 function populateCategories() {
   const categories = [...new Set(quotes.map(quote => quote.category))];
   categoryFilterEl.innerHTML = '<option value="all">All Categories</option>';
@@ -65,7 +65,6 @@ function populateCategories() {
     categoryFilterEl.appendChild(option);
   });
   
-  // Restore the last selected filter from local storage
   const lastFilter = localStorage.getItem('lastFilter');
   if (lastFilter) {
     categoryFilterEl.value = lastFilter;
@@ -95,9 +94,7 @@ function showRandomQuote() {
   quoteTextEl.textContent = `"${randomQuote.text}"`;
   quoteAuthorEl.textContent = `- ${randomQuote.author}`;
 
-  // Save the last viewed quote to session storage
   sessionStorage.setItem('lastViewedQuote', JSON.stringify(randomQuote));
-  // Save the current filter to local storage
   localStorage.setItem('lastFilter', selectedCategory);
 }
 
@@ -115,10 +112,7 @@ function addQuote() {
   const newQuote = { text: text, category: category, author: author };
   quotes.push(newQuote);
 
-  // Save the updated quotes array to local storage
   saveQuotes();
-  
-  // Re-populate categories and show a new quote
   populateCategories();
   showRandomQuote();
   
@@ -135,7 +129,6 @@ function createAddQuoteForm() {
 
 // Function to export quotes as a JSON file
 function exportToJsonFile() {
-  // Use Blob to create a file-like object from the JSON data
   const data = new Blob([JSON.stringify(quotes, null, 2)], {type: 'application/json'});
   const dataUri = URL.createObjectURL(data);
   
@@ -182,7 +175,6 @@ async function fetchQuotesFromServer() {
       throw new Error('Network response was not ok');
     }
     const data = await response.json();
-    // Simulate converting generic data to the quotes format
     return data.slice(0, 5).map(item => ({
       text: item.title,
       category: 'Server',
@@ -200,7 +192,6 @@ async function syncQuotesWithServer() {
   syncStatusEl.classList.remove('text-red-500', 'text-green-500');
   syncStatusEl.classList.add('text-yellow-500');
 
-  // Simulate posting local data to the server
   try {
     const quoteToPost = quotes[Math.floor(Math.random() * quotes.length)];
     const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
@@ -216,14 +207,13 @@ async function syncQuotesWithServer() {
     console.error("Error posting data:", error);
   }
 
-  // Then fetch the latest data from the server
   const serverQuotes = await fetchQuotesFromServer();
   if (serverQuotes.length > 0) {
-    // Simple conflict resolution: server data takes precedence
     quotes = serverQuotes;
     saveQuotes();
     populateCategories();
     showRandomQuote();
+    alert("Quotes synced with server!");
     showNotification("Quotes synced successfully!");
     syncStatusEl.textContent = 'Last synced: ' + new Date().toLocaleTimeString();
     syncStatusEl.classList.remove('text-yellow-500');
@@ -243,7 +233,6 @@ function filterQuotes() {
 
 // Function to start the periodic sync
 function startPeriodicSync() {
-  // Sync every minute (60000 milliseconds)
   setInterval(syncQuotesWithServer, 60000);
 }
 
