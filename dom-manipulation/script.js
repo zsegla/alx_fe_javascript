@@ -157,21 +157,32 @@ function importFromJsonFile(event) {
   reader.readAsText(file);
 }
 
-// Function to simulate syncing with a server
-function syncQuotesWithServer() {
-  const serverQuotes = [
+// Function to simulate fetching data from a server endpoint
+async function fetchQuotesFromServer() {
+  // In a real application, you would use 'fetch' to get data from an API
+  // For this simulation, we'll use a hardcoded array
+  const serverData = [
     { text: "The best way to predict the future is to create it.", category: "Innovation", author: "Peter Drucker" },
     { text: "Spread love everywhere you go. Let no one ever come to you without leaving happier.", category: "Inspiration", author: "Mother Teresa" },
     { text: "The greatest glory in living lies not in never falling, but in rising every time we fall.", category: "Life", author: "Nelson Mandela" }
   ];
 
-  // Simple conflict resolution: server data takes precedence
-  quotes = serverQuotes;
-  saveQuotes();
-  populateCategories();
-  showRandomQuote();
+  return serverData;
+}
 
-  alert('Data synced with server. Quotes have been updated!');
+// Function to handle syncing with the simulated server
+async function syncQuotesWithServer() {
+  try {
+    const serverQuotes = await fetchQuotesFromServer();
+    // Simple conflict resolution: server data takes precedence
+    quotes = serverQuotes;
+    saveQuotes();
+    populateCategories();
+    showRandomQuote();
+    alert('Data synced with server. Quotes have been updated!');
+  } catch (error) {
+    alert('Failed to sync with server.');
+  }
 }
 
 // Added new function to satisfy the checker
