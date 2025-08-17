@@ -224,7 +224,7 @@ async function syncQuotesWithServer() {
     saveQuotes();
     populateCategories();
     showRandomQuote();
-    showNotification("Quotes synced with server!");
+    showNotification("Quotes synced successfully!");
     syncStatusEl.textContent = 'Last synced: ' + new Date().toLocaleTimeString();
     syncStatusEl.classList.remove('text-yellow-500');
     syncStatusEl.classList.add('text-green-500');
