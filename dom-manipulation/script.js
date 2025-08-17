@@ -117,8 +117,9 @@ function createAddQuoteForm() {
 
 // Function to export quotes as a JSON file
 function exportToJsonFile() {
-  const dataStr = JSON.stringify(quotes, null, 2);
-  const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+  // Use Blob to create a file-like object from the JSON data
+  const data = new Blob([JSON.stringify(quotes, null, 2)], {type: 'application/json'});
+  const dataUri = URL.createObjectURL(data);
   
   const exportFileDefaultName = 'quotes.json';
   
