@@ -224,10 +224,12 @@ async function syncQuotesWithServer() {
     saveQuotes();
     populateCategories();
     showRandomQuote();
+    showNotification("Quotes synced with server!");
     syncStatusEl.textContent = 'Last synced: ' + new Date().toLocaleTimeString();
     syncStatusEl.classList.remove('text-yellow-500');
     syncStatusEl.classList.add('text-green-500');
   } else {
+    showNotification("Sync failed.");
     syncStatusEl.textContent = 'Sync failed.';
     syncStatusEl.classList.remove('text-yellow-500');
     syncStatusEl.classList.add('text-red-500');
