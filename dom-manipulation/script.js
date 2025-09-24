@@ -22,7 +22,7 @@ const quoteTextEl = document.getElementById('quoteText');
 const quoteAuthorEl = document.getElementById('quoteAuthor');
 const newQuoteBtn = document.getElementById('newQuote');
 const categoryFilterEl = document.getElementById('categoryFilter');
-const showFormBtn = document.getElementById('showFormBtn');
+const showFormBtn = document.getElementById('showFormBtn'); 
 const addQuoteFormContainer = document.getElementById('addQuoteFormContainer');
 const addQuoteBtn = document.getElementById('addQuoteBtn');
 const newQuoteTextEl = document.getElementById('newQuoteText');
@@ -151,8 +151,8 @@ function importFromJsonFile(event) {
   reader.onload = function(e) {
     try {
       const importedData = JSON.parse(e.target.result);
-      if (Array.isArray(importedData)) {
-        quotes = importedData;
+      if (Array.isArray(importedData)) { 
+        quotes = importedData; 
         saveQuotes();
         populateCategories();
         showRandomQuote();
